@@ -1,0 +1,19 @@
+<h1>registro de paciente</h1>
+
+<form >
+    <input type="text" placeholder="nombre" [(ngModel)]="paciente_nuevo.nombre" name="nombre"/>
+    <span>{{ nombre_error }}</span>
+    <br><br>
+
+    <input type="email" name="gmail" [(ngModel)]="paciente_nuevo.gmail" placeholder="Correo electrónico">
+    <br><br>
+
+    <input type="password" name="contrasena" [(ngModel)]="paciente_nuevo.contrasena" placeholder="Contraseña">
+    <br><br>
+
+    <button (click)="registrar()">enviar datos</button>
+    <br>
+    <br>
+    <button routerLink="/login">ya tengo cuenta</button>
+</form>
+
