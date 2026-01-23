@@ -56,7 +56,7 @@ ngOnInit(): void {
 
     if (this.id_reserva >= 1) {
       this.editar = true;
-      this.api_paciente.ver_tus_post(this.id_paciente).subscribe({
+      this.api_paciente.ver_tus_post().subscribe({
         next: (data_input: Reserva[]) => {
           this.datos_input = data_input;
           const reserva_encontrar = this.datos_input.find(r => r.id === this.id_reserva);

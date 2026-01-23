@@ -1,14 +1,44 @@
-<h1>registro de doctor</h1>
+<div class="reg-doctor-container">
+  <div class="reg-card">
+    <div class="reg-header">
+      <span class="reg-icon">📋</span>
+      <h1>Registro Médico</h1>
+      <p>Únase a nuestra red de especialistas</p>
+    </div>
 
-<form>
-    <input  type="text" placeholder="nombre de doctor" name="nombre"  [(ngModel)]="nuevo_doctor.nombre" />
-    <input  type="email" placeholder="gmail" name="nombre"  [(ngModel)]="nuevo_doctor.gmail" />
-    <input  type="number" placeholder="tu edad" name="edad"  [(ngModel)]="nuevo_doctor.edad" />
-    <input  type="password" placeholder="tu contraseña" name="contraseña"  [(ngModel)]="nuevo_doctor.contrasena" />
-    <input  type="text" placeholder="tu ocupacion" name="ocupacion"  [(ngModel)]="nuevo_doctor.ocupacion" />
+    <form class="reg-form">
+      <div class="form-grid">
+        <div class="input-field">
+          <label>Nombre Completo</label>
+          <input type="text" placeholder="Dr/Dra. Nombre Apellido" name="nombre" [(ngModel)]="nuevo_doctor.nombre" />
+        </div>
 
-    
+        <div class="input-field">
+          <label>Correo Institucional</label>
+          <input type="email" placeholder="doctor@clinica.com" name="gmail" [(ngModel)]="nuevo_doctor.gmail" />
+        </div>
 
+        <div class="input-field">
+          <label>Edad</label>
+          <input type="number" placeholder="Ej: 35" name="edad" [(ngModel)]="nuevo_doctor.edad" />
+        </div>
 
-    <button (click)="registrar_doctor()">enviar datos</button>
-</form>
+        <div class="input-field">
+          <label>Especialidad Médica</label>
+          <input type="text" placeholder="Ej: Cardiología" name="ocupacion" [(ngModel)]="nuevo_doctor.ocupacion" />
+        </div>
+
+        <div class="input-field full-width">
+          <label>Contraseña</label>
+          <input type="password" placeholder="Mínimo 8 caracteres" name="contraseña" [(ngModel)]="nuevo_doctor.contrasena" />
+        </div>
+      </div>
+
+      <button class="btn-register" (click)="registrar_doctor()">Crear Cuenta Profesional</button>
+    </form>
+
+    <div class="reg-footer">
+      <button class="btn-back" routerLink="/login_doctor">Ya tengo cuenta de doctor</button>
+    </div>
+  </div>
+</div>

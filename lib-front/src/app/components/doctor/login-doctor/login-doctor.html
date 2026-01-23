@@ -1,4 +1,34 @@
-<p>login-doctor works!</p>
+<div class="doctor-login-container">
+  <div class="login-box">
+    <div class="brand-section">
+      <div class="doctor-icon">🩺</div>
+      <h1>Portal Médico</h1>
+      <p>Inicie sesión para gestionar sus consultas</p>
+    </div>
 
+    <form class="login-form">
+      <div class="field">
+        <label>Correo Electrónico</label>
+        <input type="email" name="gmail" [(ngModel)]="login_doctor.gmail" placeholder="ejemplo@clinica.com" required>
+      </div>
 
-<button routerLink="/registrar_doctor">no tengo cuenta de doctor</button>
+      <div class="field">
+        <label>Nombre de Usuario</label>
+        <input type="text" name="nombre" [(ngModel)]="login_doctor.nombre" placeholder="Dr. Apellido" required>
+      </div>
+
+      <div class="field">
+        <label>Contraseña</label>
+        <input type="password" name="contrasena" [(ngModel)]="login_doctor.contrasena" placeholder="••••••••" required>
+      </div>
+
+      <button class="btn-submit" (click)="login()">Acceder al Panel</button>
+    </form>
+
+    <div class="footer-links">
+      <button class="btn-link" routerLink="/registrar_doctor">
+        ¿Aún no tiene cuenta? <strong>Regístrese aquí</strong>
+      </button>
+    </div>
+  </div>
+</div>

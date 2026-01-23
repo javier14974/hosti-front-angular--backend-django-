@@ -9,6 +9,10 @@ from django.contrib.auth.hashers import check_password
 from reservasApp.models import  reservas
 from reservasApp.serializer import reserva_serializer
 
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import AccessToken
+
 @csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -28,17 +32,23 @@ def registro_paciente(request):
 @api_view(['POST'])
 @permission_classes([AllowAny]) # Esto quita el error 403
 def login_paciente(request):
-    id_api = request.data.get('id')
+    gmail_api = request.data.get('gmail')
     contrasena_api = request.data.get('contrasena')
 
     try:
         #filtro con el id
-        paciente = Paciente.objects.get(id=id_api)
+        paciente = Paciente.objects.get(gmail = gmail_api)
+
+        refresh = RefreshToken() #carpeta vacia q se le agrego id 
+
+        #los datos que estan en el token para en angular guardarlos en LocalStorage
+        refresh['id'] = paciente.id
+        refresh['nombre'] = paciente.nombre
 
         if check_password(contrasena_api, paciente.contrasena):
             return Response({
-                'id': paciente.id,
-                'nombre': paciente.nombre,
+                'access': str(refresh.access_token), #token para poder hacer peticiones 
+                'refresh': str(refresh) #para cada vez q me logue reciba de nuevo el token recordemos q se pierde cada 1 dia
             }, status=status.HTTP_200_OK)
         else: 
             return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -48,11 +58,22 @@ def login_paciente(request):
 
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([AllowAny]) # Esto quita el error 403
-def ver_post_paciente(request, id_paciente):
-    reservas_ap = reservas.objects.filter(paciente_id=id_paciente).order_by('-fecha_creacion')
+def ver_post_paciente(request):
+    auth_header = request.headers.get('Authorization')
 
-    serializer_reserva = reserva_serializer(reservas_ap, many=True)
-    return Response(serializer_reserva.data, status=status.HTTP_200_OK)
+    if not auth_header:
+        return Response({'error'}, status=401)
     
+    try:
+        token_str = auth_header.split(' ')[1]
+
+        token = AccessToken(token_str)
+        paciente_log = token['id']
+
+        reserva_ap = reservas.objects.filter(paciente_id = paciente_log).order_by('-fecha_creacion')
+        data_reserva = reserva_serializer(reserva_ap, many=True)
+        return Response(data_reserva.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error'}, status=401)
+
 

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Api_services_doctor } from '../../../services/api_doctor.services';
 import { Doctor } from '../../../models/doctor.models';
 import { CommonModule } from '@angular/common';
@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 export class RegistrarDoctor {
   constructor(
     private api_doctor : Api_services_doctor,
+    private router : Router,
   ) {}
 
   
@@ -25,6 +26,8 @@ export class RegistrarDoctor {
         console.log("respuesta: ", data)
 
         this.nuevo_doctor = new Doctor(); /* limpiar el input */
+
+        this.router.navigate(['/login_doctor'])
       }, 
       error: (e) =>{
         console.log("el error es: ", e)

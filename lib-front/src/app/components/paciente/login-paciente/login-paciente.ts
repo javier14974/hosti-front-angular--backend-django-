@@ -20,7 +20,7 @@ constructor(
   error_login : string = ''
 
   paciente_log = {
-    id: 0,
+    gmail : '',
     nombre: '',
     contrasena : ''
   }
@@ -28,16 +28,13 @@ constructor(
 
 
   login(){
-    this.api_paciente.login_paciente_api(this.paciente_log.id, this.paciente_log.nombre, this.paciente_log.contrasena).subscribe({
+    this.api_paciente.login_paciente_api(this.paciente_log.gmail, this.paciente_log.nombre, this.paciente_log.contrasena).subscribe({
       next : (respuesta) =>{
-          console.log("respuesta: ", respuesta.id)
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('id_usuario', respuesta.id.toString());
-          }
-          
+        /* llaves */
+        localStorage.setItem('access', respuesta.access);
+        localStorage.setItem('refresh', respuesta.refresh);
 
-
-          this.router.navigate(['/home_paciente'], {queryParams: {nombre: this.paciente_log.nombre}})
+        this.router.navigate(['/home_paciente'])
       },
       error : (e) =>{
         console.log("error al hacer login: ", e)

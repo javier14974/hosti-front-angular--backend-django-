@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,8 +28,33 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "authorization", # <--- ESTO DEBE ESTAR AQUÍ
+    "content-type",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
 
-# Application definition
+#todo lo de seguridad 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny', # Permite entrar, nosotros validamos adentro
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # Deja esto vacío momentáneamente para que no interfiera
+    ],
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),    # Tienes un día para renovarlo sin loguearte
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),               # En Angular usaremos el prefijo "Bearer"
+}
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -43,6 +69,9 @@ INSTALLED_APPS = [
     'pacienteApp',
     'reservasApp',
 ]
+
+
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
