@@ -22,7 +22,7 @@ from django.urls import path
 
 from pacienteApp.views import registro_paciente, login_paciente, ver_post_paciente
 from reservasApp.views import subir_reserva, eliminar_post, editar_post
-from doctorApp.views import registro_doctor, login_doctor, ver_todo_post
+from doctorApp.views import registro_doctor, login_doctor, ver_todo_post, tomar_reserva
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -47,4 +47,5 @@ urlpatterns = [
     path('doctor/registro_doctor/', registro_doctor, name='registro_doctor'),
     path('doctor/login_doctor/', login_doctor, name='login_doctor'),
     path('doctor/ver_post/', ver_todo_post, name='ver_post'),
+    path('doctor/asignar/<int:id_reserva>/', tomar_reserva, name='tomar_reserva')
 ]

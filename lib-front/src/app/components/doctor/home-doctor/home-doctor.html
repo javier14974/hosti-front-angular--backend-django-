@@ -1,1 +1,75 @@
-<p>home-doctor works!</p>
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="user-info">
+      <h1>Panel de <span>Control Médico</span></h1>
+      <p class="id-badge">Gestión de Reservas Disponibles</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-logout" (click)="salir()">Cerrar Sesión</button>
+    </div>
+  </header>
+
+  <section class="filter-section">
+    <div class="search-box">
+      <input type="text" placeholder="Buscar nombre de paciente..." [(ngModel)]="nombre_filtro" class="main-input"/>
+      
+      <div class="filter-buttons">
+        @if (nombre_filtro && paciente_filtrado.length === 0) {
+          <button class="btn-post" (click)="filtrar()">Filtrar Paciente</button>
+        }
+        @if (paciente_filtrado.length > 0) {
+          <button class="btn-delete" (click)="eliminar_filtro()">Limpiar Filtro</button>
+        }
+      </div>
+    </div>
+
+    @if (paciente_filtrado.length > 0) {
+      <div class="results-area">
+        <h3>Resultados del filtro:</h3>
+        <div class="posts-grid">
+          @for (nom of paciente_filtrado; track nom.id) {
+            <div class="post-card filter-highlight">
+              <div class="post-body">
+                <p><strong>Encontrado:</strong> {{ nom.nombre_paciente }}</p>
+                <small>ID: {{ nom.id }}</small>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </section>
+
+  <hr class="separator">
+
+  <section class="posts-section">
+    <h2>Todas las solicitudes de pacientes</h2>
+    
+    <div class="posts-grid">
+      @for (usu of todo_post; track $index) {
+        <div class="post-card">
+          <div class="post-status" [attr.data-status]="usu.doctor ? 'Asignado' : 'Pendiente'">
+            {{ usu.doctor ? 'Con Doctor' : 'Disponible' }}
+          </div>
+          
+          <div class="post-body">
+            <h3>{{ usu.descripcion_dolor }}</h3>
+            <p><strong>Paciente:</strong> {{ usu.nombre_paciente }}</p>
+            <p><strong>ID Reserva:</strong> #{{ usu.id }}</p>
+            <p class="doctor-info">👨‍⚕️ Doctor actual: {{ usu.doctor || 'Ninguno' }}</p>
+          </div>
+
+          <div class="post-actions">
+            <button class="btn-edit" (click)="atender(usu.id)">Atender Paciente</button>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (todo_post.length === 0) {
+      <div class="empty-state">
+        <p>No hay publicaciones disponibles en este momento.</p>
+      </div>
+    }
+  </section>
+</div>

@@ -9,17 +9,26 @@
     <form class="login-form">
       <div class="field">
         <label>Correo Electrónico</label>
-        <input type="email" name="gmail" [(ngModel)]="login_doctor.gmail" placeholder="ejemplo@clinica.com" required>
+        <input type="email" name="gmail" [(ngModel)]="login_doctor.gmail" placeholder="ejemplo@clinica.com" (input)="verificacion_gmail()"  required>
+        @if (mensaje_error_gmail){
+          <p>{{ mensaje_error_gmail }}</p>
+        }
       </div>
 
       <div class="field">
         <label>Nombre de Usuario</label>
-        <input type="text" name="nombre" [(ngModel)]="login_doctor.nombre" placeholder="Dr. Apellido" required>
+        <input type="text" name="nombre" [(ngModel)]="login_doctor.nombre" placeholder="Dr. Apellido" (input)="verificacion_nombre()"  required>
+        @if (mensaje_error_nombre){
+          <p>{{ mensaje_error_nombre }}</p>
+        }
       </div>
 
       <div class="field">
         <label>Contraseña</label>
-        <input type="password" name="contrasena" [(ngModel)]="login_doctor.contrasena" placeholder="••••••••" required>
+        <input type="password" name="contrasena" [(ngModel)]="login_doctor.contrasena" placeholder="••••••••"  (input)="verificacion_contrasena()" required>
+        @if (mensaje_error_contrasena){
+          <p>{{ mensaje_error_contrasena}}</p>
+        }
       </div>
 
       <button class="btn-submit" (click)="login()">Acceder al Panel</button>
