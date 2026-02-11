@@ -1,0 +1,55 @@
+<div class="doctor-panel">
+  <header class="panel-header">
+    <div class="doctor-profile">
+      <div class="avatar">Dr</div>
+      <div class="info">
+        <h1>{{ nombreUsuario }}</h1>
+        <span class="specialty-badge">{{ ocupacion }}</span>
+      </div>
+    </div>
+    <div class="stats">
+      <span class="count"><strong>{{ todos_pacientes.length }}</strong> Pacientes asignados</span>
+    </div>
+  </header>
+
+  <section class="patient-list">
+    <h2>Expedientes de Pacientes</h2>
+    
+    <div class="table-container">
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Paciente</th>
+            <th>Descripción del Malestar</th>
+            <th>Fecha Registro</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (paci of todos_pacientes; track paci.id) {
+            <tr class="patient-row">
+              <td class="col-id">#{{ paci.id }}</td>
+              <td class="col-name"><strong>{{ paci.nombre_paciente }}</strong></td>
+              <td class="col-desc">
+                <div class="text-truncate">{{ paci.descripcion_dolor }}</div>
+              </td>
+              <td class="col-date">{{ paci.fecha_creacion }}</td>
+              <td class="col-actions">
+                <button class="btn-unlink" (click)="paci.id" title="Desvincular paciente">
+                  <span class="icon">✕</span> Desvincular
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (todos_pacientes.length === 0) {
+      <div class="empty-panel">
+        <p>No tiene pacientes vinculados actualmente.</p>
+      </div>
+    }
+  </section>
+</div>

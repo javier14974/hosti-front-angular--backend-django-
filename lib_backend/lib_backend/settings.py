@@ -30,11 +30,17 @@ ALLOWED_HOSTS = []
 
 CORS_ALLOW_HEADERS = [
     "accept",
-    "authorization", # <--- ESTO DEBE ESTAR AQUÍ
+    "authorization", 
     "content-type",
     "user-agent",
     "x-csrftoken",
     "x-requested-with",
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
 ]
 
 #todo lo de seguridad 

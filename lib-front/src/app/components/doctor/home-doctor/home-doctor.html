@@ -5,62 +5,77 @@
       <p class="id-badge">Gestión de Reservas Disponibles</p>
     </div>
     <div class="header-actions">
+      <button class="btn-secondary" routerLink="/pacientes_de_doctor">Mis Pacientes</button>
       <button class="btn-logout" (click)="salir()">Cerrar Sesión</button>
     </div>
   </header>
 
   <section class="filter-section">
-    <div class="search-box">
-      <input type="text" placeholder="Buscar nombre de paciente..." [(ngModel)]="nombre_filtro" class="main-input"/>
-      
-      <div class="filter-buttons">
-        @if (nombre_filtro && paciente_filtrado.length === 0) {
-          <button class="btn-post" (click)="filtrar()">Filtrar Paciente</button>
-        }
-        @if (paciente_filtrado.length > 0) {
-          <button class="btn-delete" (click)="eliminar_filtro()">Limpiar Filtro</button>
-        }
-      </div>
-    </div>
-
-    @if (paciente_filtrado.length > 0) {
-      <div class="results-area">
-        <h3>Resultados del filtro:</h3>
-        <div class="posts-grid">
-          @for (nom of paciente_filtrado; track nom.id) {
-            <div class="post-card filter-highlight">
-              <div class="post-body">
-                <p><strong>Encontrado:</strong> {{ nom.nombre_paciente }}</p>
-                <small>ID: {{ nom.id }}</small>
-              </div>
-            </div>
+    <div class="search-card">
+      <div class="search-box">
+        <input type="text" placeholder="Buscar nombre de paciente..." [(ngModel)]="nombre_filtro" class="main-input"/>
+        
+        <div class="filter-buttons">
+          @if (nombre_filtro && paciente_filtrado.length === 0) {
+            <button class="btn-search" (click)="filtrar()">🔍 Filtrar</button>
+          }
+          @if (paciente_filtrado.length > 0) {
+            <button class="btn-clear" (click)="eliminar_filtro()">Limpiar</button>
           }
         </div>
       </div>
-    }
+
+      @if (paciente_filtrado.length > 0) {
+        <div class="results-area animate-fade">
+          <h3>Resultados encontrados:</h3>
+          <div class="results-list">
+            @for (nom of paciente_filtrado; track nom.id) {
+              <div class="result-item">
+                <span class="p-name">{{ nom.nombre_paciente }}</span>
+                <span class="p-id">ID: {{ nom.id }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
   </section>
 
-  <hr class="separator">
-
   <section class="posts-section">
-    <h2>Todas las solicitudes de pacientes</h2>
+    <div class="section-header">
+      <h2>Solicitudes Disponibles</h2>
+      <span class="count-tag">{{ todo_post.length }} casos</span>
+    </div>
+
+    @if (validacion_1 === false || validacion_2 === false) {
+      <div class="alert-box animate-shake">
+        <span class="icon">⚠️</span>
+        {{ validacion_1 === false ? 'Ya eres el doctor asignado a este paciente.' : 'Este paciente ya está siendo atendido por otro doctor.' }}
+      </div>
+    }
     
     <div class="posts-grid">
-      @for (usu of todo_post; track $index) {
-        <div class="post-card">
+      @for (usu of todo_post; track usu.id) {
+        <div class="post-card" [class.assigned]="usu.doctor">
           <div class="post-status" [attr.data-status]="usu.doctor ? 'Asignado' : 'Pendiente'">
-            {{ usu.doctor ? 'Con Doctor' : 'Disponible' }}
+            {{ usu.doctor ? 'Ocupado' : 'Disponible' }}
           </div>
           
           <div class="post-body">
             <h3>{{ usu.descripcion_dolor }}</h3>
-            <p><strong>Paciente:</strong> {{ usu.nombre_paciente }}</p>
-            <p><strong>ID Reserva:</strong> #{{ usu.id }}</p>
-            <p class="doctor-info">👨‍⚕️ Doctor actual: {{ usu.doctor || 'Ninguno' }}</p>
+            <div class="post-info">
+              <p><strong>Paciente:</strong> {{ usu.nombre_paciente }}</p>
+              <p class="reserva-id">ID Reserva: #{{ usu.id }}</p>
+            </div>
+            <div class="doctor-badge">
+              👨‍⚕️ {{ usu.doctor ? 'Atendido por: ' + usu.doctor : 'Sin doctor asignado' }}
+            </div>
           </div>
 
           <div class="post-actions">
-            <button class="btn-edit" (click)="atender(usu.id)">Atender Paciente</button>
+            <button class="btn-attend" [disabled]="usu.doctor" (click)="atender(usu.id)">
+              {{ usu.doctor ? 'No Disponible' : 'Atender Paciente' }}
+            </button>
           </div>
         </div>
       }
@@ -68,6 +83,7 @@
 
     @if (todo_post.length === 0) {
       <div class="empty-state">
+        <div class="empty-icon">📂</div>
         <p>No hay publicaciones disponibles en este momento.</p>
       </div>
     }

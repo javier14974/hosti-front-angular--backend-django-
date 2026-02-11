@@ -16,6 +16,7 @@ export class Api_services_doctor{
     private login_url = 'http://127.0.0.1:8000/doctor/login_doctor/';
     private ver_post_url = 'http://127.0.0.1:8000/doctor/ver_post/';
     private asignar_url = 'http://127.0.0.1:8000/doctor/asignar/';
+    private tus_pacientes_url = 'http://127.0.0.1:8000/doctor/mis_pacientes/';
 
     constructor(private http: HttpClient){ }
 
@@ -41,6 +42,16 @@ export class Api_services_doctor{
       return this.http.patch(this.asignar_url+ id_reserva + "/", {},
         { headers: paquete}
       );
+    }
+
+    tus_pacientes(){
+        const token = localStorage.getItem('access');
+        const paquete = new HttpHeaders({
+            'Authorization': 'Bearer ' + token
+        });
+        return this.http.get(this.tus_pacientes_url, 
+        { headers: paquete}
+        );
     }
 }
 

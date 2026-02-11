@@ -6,6 +6,7 @@ import { SubirReserva } from './components/subir-reserva/subir-reserva';
 import { HomeDoctor } from './components/doctor/home-doctor/home-doctor';
 import { RegistrarDoctor } from './components/doctor/registrar-doctor/registrar-doctor';
 import { LoginDoctor } from './components/doctor/login-doctor/login-doctor';
+import { PacientesDeDoctor } from './components/doctor/pacientes-de-doctor/pacientes-de-doctor';
 
 
 export const routes: Routes = [
@@ -18,4 +19,5 @@ export const routes: Routes = [
   {path: 'home_doctor', component: HomeDoctor},
   {path: 'registrar_doctor', component: RegistrarDoctor},
   {path: 'login_doctor', component: LoginDoctor},
+  {path: 'pacientes_de_doctor', component: PacientesDeDoctor},
 ];

@@ -73,14 +73,12 @@ from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny # Usamos AllowAny para que no bloquee el 403
 
+@csrf_exempt
 @api_view(['PATCH'])
 @permission_classes([AllowAny]) 
 def tomar_reserva(request, id_reserva):
     auth_header = request.headers.get('Authorization')
     
-    if not auth_header:
-        return Response({'error': 'No mandaste el token'}, status=401)
-
     try: 
         # 1. Extraemos el ID del doctor del token manualmente
         token_str = auth_header.split(' ')[1]
@@ -92,8 +90,20 @@ def tomar_reserva(request, id_reserva):
         # 2. Buscamos la reserva
         reserva = reservas.objects.get(id=id_reserva)
 
+        
         # 3. Asignamos (si tu modelo espera un número en el campo doctor)
-        reserva.doctor = doctor_id_del_token 
+        if reserva.doctor_id == doctor_id_del_token:
+            return Response({
+                'mensaje': 'ya asignado'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        if reserva.doctor_id is not None and reserva.doctor_id != doctor_id_del_token:
+            return Response({
+                'mensaje': 'esta reserva ya tiene doctor'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        #pasando todas las validaciones
+        reserva.doctor_id = doctor_id_del_token 
         reserva.estado = 'Atendido'
         reserva.save()
 
@@ -102,3 +112,22 @@ def tomar_reserva(request, id_reserva):
     except Exception as e:
         print(f"Error: {e}")
         return Response({'error': 'Token no válido o error interno'}, status=403)
+    
+@csrf_exempt
+@api_view(['GET'])
+@permission_classes([AllowAny]) # Esto quita el error 403   
+def ver_mis_pacientes(request):
+    auth_header = request.headers.get('Authorization')
+    
+    try: 
+
+        token_str = auth_header.split(' ')[1]
+        token = AccessToken(token_str)
+        
+
+        doctor_log = token['id'] 
+        tus_reservas = reservas.objects.filter(doctor_id=doctor_log).order_by('-fecha_creacion')
+        data_serializer = reserva_serializer(tus_reservas, many=True)
+        return Response(data_serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response('error', status=status.HTTP_400_BAD_REQUEST)

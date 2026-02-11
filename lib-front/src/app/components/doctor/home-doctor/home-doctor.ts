@@ -5,6 +5,7 @@ import { Api_services_doctor } from '../../../services/api_doctor.services';
 import { Reserva } from '../../../models/reserva.models';
 import { CommonModule } from '@angular/common';
 import { todo } from 'node:test';
+import { error } from 'node:console';
 
 @Component({
   selector: 'app-home-doctor',
@@ -22,6 +23,8 @@ export class HomeDoctor implements OnInit{
 todo_post  : Reserva[] = []
 nombre_filtro : string = ''
 paciente_filtrado : any[] = []
+validacion_1 : boolean = true;
+validacion_2 : boolean = true;
 
   ngOnInit() : void{
     const token = localStorage.getItem('access');
@@ -50,11 +53,19 @@ paciente_filtrado : any[] = []
   atender(id_reserva : any){
     console.log(id_reserva)
     this.api_doctor.asignar_paciente(id_reserva).subscribe({
-      next: (data) =>{
+      next: (data : any) =>{
         console.log("respuesta es: ", data)
       }, 
       error: (e) =>{
         console.log("el errror es: ", e)
+        if(e.error.mensaje === 'ya asignado'){
+          this.validacion_1 = false;
+          this.validacion_2 = true;
+        }
+        else if(e.error.mensaje === 'esta reserva ya tiene doctor'){
+          this.validacion_2 = false;
+          this.validacion_1 = true;
+        }
       }
     })
   }
